@@ -178,6 +178,47 @@ public class InsurancePolicyControllerIntegrationTest {
 Этот интеграционный тест проверяет работу API для управления контентом, включая создание, чтение, обновление и удаление контента, а также обработку ошибок, связанных с отсутствием контента. Тесты выполняются с использованием Spring Boot, JUnit и MockMvc, что позволяет эмулировать HTTP-запросы и проверять взаимодействие между различными компонентами системы.
 
 
+<h1>Пользовательский интерфейс</h1>
+
+<h2>Примеры экранов UI</h2>
+
+Страница авторизации в системе
+
+<img width="386" alt="image" src="https://github.com/user-attachments/assets/e4bfd914-287a-47c0-a53f-4696ba362ef7" />
+
+Страница регистрации
+
+<img width="381" alt="image" src="https://github.com/user-attachments/assets/63b54fdd-6dc2-4db5-97fb-b2fe1f732738" />
+
+Главная страница 
+
+<img width="428" alt="image" src="https://github.com/user-attachments/assets/851202ff-66c4-4e37-9550-d4e22044efcb" />
+
+Страница с видами страхования
+
+<img width="454" alt="image" src="https://github.com/user-attachments/assets/057f8901-dcdb-4961-86b7-28654379c587" />
+
+Страница профиля клиента
+
+<img width="429" alt="image" src="https://github.com/user-attachments/assets/55c013e3-be53-4fb0-b3d8-fccee11ca0f7" />
+
+Страница работы управляющего
+
+<img width="376" alt="image" src="https://github.com/user-attachments/assets/fb33aa22-b5a8-4377-9360-d01cea28c3ca" />
+
+Страница обращения к страховому агенту
+
+<img width="404" alt="image" src="https://github.com/user-attachments/assets/0acf7b16-f704-4492-9f19-5a54199736b1" />
+
+
+
+
+
+
+
+
+
+
 
 
 
