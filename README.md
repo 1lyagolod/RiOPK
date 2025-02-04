@@ -180,6 +180,20 @@ public class InsurancePolicyControllerIntegrationTest {
 
 <h1>Пользовательский интерфейс</h1>
 
+<h2> User-flow диаграммы</h2>
+
+Диаграмма user flow для роли «Управляющий»
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/d85c1e43-9c2e-4e2f-b02c-26a5f35bd7ca" />
+
+Диаграмма user flow для роли «Клиент»
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/82b2fba2-7c1f-4a2a-bfb6-6f90f874ab4c" />
+
+Диаграмма user flow для роли «Страховой агент»
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/4f9c917d-d264-47bb-8b21-441383edd13b" />
+
 <h2>Примеры экранов UI</h2>
 
 Страница авторизации в системе
