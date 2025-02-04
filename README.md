@@ -15,6 +15,7 @@
 
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/b94c8d42-0d85-40dd-baa9-53a94591792c" />
 
+
 Архитекутра
 
 Реляционная схема базы данных
