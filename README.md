@@ -25,3 +25,14 @@
 Схема алгоритма регистрации страхового случая
 
 <img width="321" alt="image" src="https://github.com/user-attachments/assets/fae43ebb-e216-4815-bff9-53070bc5a4bd" />
+
+Диаграмма развертывания программного средства
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/5405b9ac-65b5-497b-b512-20ce12157d83" />
+
+Диаграмма последовательности регистрации страхового случая
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/aeed3a71-dd80-44e6-87c8-4c227a968977" />
+
+
+
