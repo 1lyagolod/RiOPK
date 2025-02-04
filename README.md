@@ -65,6 +65,118 @@
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/6dfac94c-9148-4804-b426-54242ee62ee6" />
 
 
+<h1>Тестирование</h1>
+
+Результат Junit-тестов
+
+<img width="310" alt="image" src="https://github.com/user-attachments/assets/e7639c85-a1f5-4498-987b-7173cdd36ec8" />
+
+В этом тесте проверяется функциональность сервисного слоя для работы с сущностью Content. Он включает несколько тестов для различных операций с контентом: успешное получение всех контентов (findAllSuccess), успешное получение контента по ID (findByIdSuccess), ситуация, когда контент по ID не найден (findByIdNotFound), успешное сохранение контента (saveSuccess), успешное обновление контента (updateSuccess), ситуация, когда обновляемый контент не найден (updateNotFound), успешное удаление контента (deleteSuccess) и ситуация, когда удаляемый контент не найден (deleteNotFound). Каждый тест использует Mockito для имитации поведения репозитория и проверки правильности вызовов, а также исключений в случае ошибок.
+
+Пример интеграционного теста с использованием Spring Boot и Junit:
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.example.demo.model.InsurancePolicy;
+import com.example.demo.service.InsurancePolicyService;
+import com.example.demo.repository.InsurancePolicyRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class InsurancePolicyControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private InsurancePolicyRepository insurancePolicyRepository;
+
+    @InjectMocks
+    private InsurancePolicyService insurancePolicyService;
+
+    private InsurancePolicy testPolicy;
+
+    @BeforeEach
+    public void setup() {
+        // создаём тестовый страховой полис
+        testPolicy = new InsurancePolicy(1L, "Test Policy", "2025-01-01", "Life Insurance", 500.0, "Active");
+        insurancePolicyRepository.save(testPolicy); // сохраняем в базу данных для тестов
+    }
+
+    @Test
+    void testCreateInsurancePolicy() throws Exception {
+        InsurancePolicy newPolicy = new InsurancePolicy(null, "New Policy", "2025-02-01", "Car Insurance", 300.0, "Pending");
+
+        mockMvc.perform(post("/api/policies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(newPolicy)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name", is("New Policy")))
+                .andExpect(jsonPath("$.startDate", is("2025-02-01")));
+    }
+
+    @Test
+    void testGetInsurancePolicyById() throws Exception {
+        mockMvc.perform(get("/api/policies/{id}", testPolicy.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(testPolicy.getName())))
+                .andExpect(jsonPath("$.startDate", is(testPolicy.getStartDate())))
+                .andExpect(jsonPath("$.type", is(testPolicy.getType())))
+                .andExpect(jsonPath("$.premium", is(testPolicy.getPremium())))
+                .andExpect(jsonPath("$.status", is(testPolicy.getStatus())));
+    }
+
+    @Test
+    void testUpdateInsurancePolicy() throws Exception {
+        InsurancePolicy updatedPolicy = new InsurancePolicy(testPolicy.getId(), "Updated Policy", "2025-03-01", "Home Insurance", 700.0, "Active");
+
+        mockMvc.perform(put("/api/policies/{id}", testPolicy.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updatedPolicy)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Updated Policy")))
+                .andExpect(jsonPath("$.startDate", is("2025-03-01")))
+                .andExpect(jsonPath("$.type", is("Home Insurance")))
+                .andExpect(jsonPath("$.premium", is(700.0)))
+                .andExpect(jsonPath("$.status", is("Active")));
+    }
+
+    @Test
+    void testDeleteInsurancePolicy() throws Exception {
+        mockMvc.perform(delete("/api/policies/{id}", testPolicy.getId()))
+                .andExpect(status().isNoContent());
+
+        Optional<InsurancePolicy> deletedPolicy = insurancePolicyRepository.findById(testPolicy.getId());
+        // Проверяем, что полис был удален
+        assert deletedPolicy.isEmpty();
+    }
+
+    @Test
+    void testInsurancePolicyNotFound() throws Exception {
+        mockMvc.perform(get("/api/policies/{id}", 999L))
+                .andExpect(status().isNotFound());
+    }
+}
+
+Этот интеграционный тест проверяет работу API для управления контентом, включая создание, чтение, обновление и удаление контента, а также обработку ошибок, связанных с отсутствием контента. Тесты выполняются с использованием Spring Boot, JUnit и MockMvc, что позволяет эмулировать HTTP-запросы и проверять взаимодействие между различными компонентами системы.
+
 
 
 
