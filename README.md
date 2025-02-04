@@ -17,6 +17,8 @@
 
 Архитекутра
 
+Реляционная схема базы данных
+
 <img width="423" alt="image" src="https://github.com/user-attachments/assets/18b6564e-a2e6-47bd-927d-5e37fbe654d9" />
 
 Схема алгоритма регистрации страхового случая
