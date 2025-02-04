@@ -16,7 +16,7 @@
 <img width="450" alt="image" src="https://github.com/user-attachments/assets/b94c8d42-0d85-40dd-baa9-53a94591792c" />
 
 
-Архитекутра
+<h1>Архитекутра</h1>
 
 Реляционная схема базы данных
 
@@ -35,14 +35,14 @@
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/aeed3a71-dd80-44e6-87c8-4c227a968977" />
 
 
-Документация
+<h1>Документация</h1>
 
 Разработанная документация для сервиса UserService
 
 <img width="471" alt="image" src="https://github.com/user-attachments/assets/4f2705d8-be3c-4bae-97b6-5941315c4760" />
 
 
-Оценка качества
+<h1>Оценка качества</h1>
 
 Результаты анализа
 
