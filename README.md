@@ -5,3 +5,5 @@
 <img width="590" alt="Снимок экрана 2025-02-04 в 18 42 55" src="https://github.com/user-attachments/assets/350351f5-2666-454e-aeb6-4d2a2ad1f3d0" />
 С4- модель третьего уровня
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/46febd8e-84b9-4e5a-8b6c-9a8d174c4fb9" />
+Диаграмма классов
+<img width="450" alt="image" src="https://github.com/user-attachments/assets/b94c8d42-0d85-40dd-baa9-53a94591792c" />
