@@ -230,6 +230,170 @@ public class InsurancePolicyControllerIntegrationTest {
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/5ec008c7-4c99-40aa-b9ca-899c61ad5147" />
 
 
+<h1>Развертывание</h1>
+
+Dockerfile для сервиса UserService.
+
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+
+COPY --from=build /app/target/userservice-*.jar userservice.jar
+
+ENV JAVA_OPTS="-Xms128m -Xmx256m"
+
+CMD ["sh", "-c", "java $JAVA_OPTS -jar userservice.jar"]
+
+Этот Dockerfile описывает процесс сборки и запуска Java приложения, используя Maven для сборки и OpenJDK для выполнения. 
+Первая фаза: FROM maven:3.9.8-eclipse-temurin-21 as maven-builder
+Это стадия использует образ Maven, который включает Java 21 от Eclipse Temurin. Имя этой стадии – maven-builder. Используя многоэтапную сборку, минимизируется размер итогового образа, копируя только необходимые артефакты.
+Копирование исходников и POM файла:
+COPY src /app/src
+COPY pom.xml /app
+Исходный код приложения и файл pom.xml копируются в директорию /app в контейнере. Это нужно для того, чтобы Maven мог выполнить сборку проекта.Рабочая директория и сборка с помощью Maven:
+WORKDIR /app
+RUN mvn clean install -U -DskipTests
+Устанавливается рабочая директория /app. Команда mvn clean install устанавливает все зависимости, компилирует код, упаковывает проект в JAR-файл, но пропускает тесты благодаря -DskipTests.
+Вторая фаза: Java Runtime Environment
+Использование OpenJDK для выполнения:
+FROM openjdk:21
+Эта стадия основывается на образе OpenJDK 21. Здесь мы будем только запускать наше приложение, без всего лишнего, что используется в стадии сборки.
+Копирование артефакта:
+COPY --from=maven-builder /app/target /user-service-1.0.0-SNAPSHOT.jar /app/app.jar
+Готовый JAR-файл копируется из предыдущей стадии в новую директорию /app под именем app.jar.
+Рабочая директория:
+WORKDIR /app
+Устанавливает рабочую директорию на /app.
+Открытие порта:
+EXPOSE 8080
+Указание Docker, что контейнер будет слушать на порту 8080. Это типично для Spring Boot приложений.
+Команда для запуска:
+CMD ["java", "-jar", "app.jar"]
+Устанавливает команду, которая запускается при старте контейнера. В данном случае, это выполнение JAR-файла приложения с помощью java -jar.
+Dockerfile для сервиса paper-service схож по своей структуре с файлом для user-service. 
+Ниже приведен Dockerfile для сервиса PolicyService.
+
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/content-service-*.jar content-service.jar
+
+ENV JAVA_OPTS="-Xms128m -Xmx256m"
+EXPOSE 8080
+CMD ["sh", "-c", "java $JAVA_OPTS -jar content-service.jar"]
+
+Dockerfile для frondend части приложения
+
+<img width="372" alt="image" src="https://github.com/user-attachments/assets/c073fadd-aa06-4ba9-990e-a090c9b3d846" />
+
+Этот Dockerfile создаёт среду, в которой React-приложение может быть собрано и запущено. Оно использует Alpine-образ для минимизации размера контейнера, устанавливает все необходимые зависимости, создает сборку приложения, а затем запускает сервер для обслуживания запросов. 
+Описание docker-compose.yaml для поднятия приложения
+
+version: "3.7"
+services:
+ user_service:
+   image: user/user-service
+   build: ./backend/user-service
+   restart: always
+   ports:
+     - 8080:8080
+   networks:
+     - postgres-net
+   environment:
+     - spring.datasource.url=jdbc:postgresql://postgresql:5432/mediacontent
+   depends_on:
+     - postgresql
+   volumes:
+     - .m2:/root/.m2
+  content_service:
+   image: user/mediacontent
+   build: ./backend/mediacontent
+   restart: always
+   ports:
+     - 8081:8081
+   networks:
+     - postgres-net
+   environment:
+     - spring.datasource.url=jdbc:postgresql://postgresql:5432/mediacontent?currentSchema=content_schema
+   depends_on:
+     - postgresql
+   volumes:
+     - .m2:/root/.m2
+  frond_end:
+   image: resource/frontend
+   build: ./client
+   restart: always
+   ports:
+     - 3000:3000
+
+ postgresql:
+   image: postgres
+   restart: always
+   ports:
+     - 5432:5432
+   networks:
+     - postgres-net
+   environment:
+     POSTGRES_DB : mediacontent
+     POSTGRES_USER :  postgres
+     POSTGRES_PASSWORD : postgres
+networks:
+ postgres-net:
+
+Этот Docker Compose файл определяет настройку окружающей среды для целого приложения, включающего несколько микросервисов и PostgreSQL в контейнерах Docker. 
+version: 3.7 – определяет версию Docker Compose, которая используется для парсинга файла. Используется версия 3.7, которая совместима с различными функциями управления сетями и сервисами.
+Описание сервисов:
+1  user_service:
+ image: user/user-service — используется как базовый образ.
+ build: указывает на директорию ./backend/user-service, содержащую Dockerfile для user_service сервиса.
+ restart: always — сервис будет автоматически перезапущен, если выйдет из строя.
+ ports: перенаправление порта 8080 контейнера на хост-машину.
+ networks: подключение к внутри-контейнерной сети postgres-net для связи с другими сервисами.
+ environment: устанавливает подключение к базе данных через URL JDBC для PostgreSQL.
+ depends_on: позвляет сервису ожидать доступности сервиса postgresql перед стартом.
+ volumes: указывает том, чтобы сохранять/кешировать зависимости Maven локально, благодаря чему скорость сборки повышается, если зависимости не изменяются.
+2 content_service:
+Почти идентичен user_service, с отличиями в:
+ build: путь к сборке сервиса - ./backend/paper-service.
+ ports: прослушивание порта 8081.
+ environment: URL содержит параметр подключения к схеме papers_schema.
+3 frond_end:
+ image: user/frontend — образ для фронтенд-приложения.
+ build: путь ./client содержит файлы сборки для фронтенда.
+ ports: экспонирование порта 3000 на хосте.
+4 postgresql:
+ image: postgres — официальный образ PostgreSQL.
+ restart: always — для автоматического перезапуска.
+ ports: ремаппинг порта 5432 (стандартный порт PostgreSQL).
+ networks: подключение к сети postgres-net, что позволяет другим сервисам подключаться к этой базе данных.
+ environment: настройка параметров подключения к базе:
+ POSTGRES_DB: название создаваемой базы данных.
+ POSTGRES_USER и POSTGRES_PASSWORD: учетные данные для доступа к базе.
+Networks:
+postgres-net: определение внутренней сети, обеспечивающей соединение между контейнерами. Использование сети необходимо для обеспечения ускоренной и защищенной связи между сервисами.
+
+
+
+
+
+
+
+
+
 
 
 
