@@ -35,4 +35,38 @@
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/aeed3a71-dd80-44e6-87c8-4c227a968977" />
 
 
+Документация
+
+Разработанная документация для сервиса UserService
+
+<img width="471" alt="image" src="https://github.com/user-attachments/assets/4f2705d8-be3c-4bae-97b6-5941315c4760" />
+
+
+Оценка качества
+
+Результаты анализа
+
+<img width="385" alt="image" src="https://github.com/user-attachments/assets/27fec749-d805-49d2-a1e6-606af1bfca7c" />
+
+Конечный результат анализа
+
+<img width="354" alt="image" src="https://github.com/user-attachments/assets/e497d0c0-cc61-4c27-a82c-bee4307bd93e" />
+
+Оценка кода по метрике надежность
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/8019703e-360f-4d75-9f0c-ffb62f783962" />
+
+Оценка кода по метрике безопасность
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/bff9ecf0-031c-43eb-8dd6-e04884083ea3" />
+
+Оценка кода по метрике поддерживаемость
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/6dfac94c-9148-4804-b426-54242ee62ee6" />
+
+
+
+
+
+
 
