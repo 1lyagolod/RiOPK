@@ -234,22 +234,8 @@ public class InsurancePolicyControllerIntegrationTest {
 
 Dockerfile для сервиса UserService.
 
-FROM maven:3.9.4-eclipse-temurin-17 AS build
-WORKDIR /app
+<img width="482" alt="Снимок экрана 2025-02-04 в 20 12 03" src="https://github.com/user-attachments/assets/ab9d49c4-4cd2-4101-9136-f94363e1e4d7" />
 
-COPY pom.xml .
-COPY src ./src
-
-RUN mvn clean package -DskipTests
-
-FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-
-COPY --from=build /app/target/userservice-*.jar userservice.jar
-
-ENV JAVA_OPTS="-Xms128m -Xmx256m"
-
-CMD ["sh", "-c", "java $JAVA_OPTS -jar userservice.jar"]
 
 Этот Dockerfile описывает процесс сборки и запуска Java приложения, используя Maven для сборки и OpenJDK для выполнения. 
 Первая фаза: FROM maven:3.9.8-eclipse-temurin-21 as maven-builder
@@ -280,21 +266,7 @@ CMD ["java", "-jar", "app.jar"]
 Dockerfile для сервиса paper-service схож по своей структуре с файлом для user-service. 
 Ниже приведен Dockerfile для сервиса PolicyService.
 
-FROM maven:3.9.4-eclipse-temurin-17 AS build
-WORKDIR /app
-
-COPY pom.xml .
-COPY src ./src
-
-RUN mvn clean package -DskipTests
-
-FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-COPY --from=build /app/target/content-service-*.jar content-service.jar
-
-ENV JAVA_OPTS="-Xms128m -Xmx256m"
-EXPOSE 8080
-CMD ["sh", "-c", "java $JAVA_OPTS -jar content-service.jar"]
+<img width="536" alt="Снимок экрана 2025-02-04 в 20 12 22" src="https://github.com/user-attachments/assets/76386f75-be34-4829-879b-d7798253c2b3" />
 
 Dockerfile для frondend части приложения
 
@@ -303,56 +275,7 @@ Dockerfile для frondend части приложения
 Этот Dockerfile создаёт среду, в которой React-приложение может быть собрано и запущено. Оно использует Alpine-образ для минимизации размера контейнера, устанавливает все необходимые зависимости, создает сборку приложения, а затем запускает сервер для обслуживания запросов. 
 Описание docker-compose.yaml для поднятия приложения
 
-version: "3.7"
-services:
- user_service:
-   image: user/user-service
-   build: ./backend/user-service
-   restart: always
-   ports:
-     - 8080:8080
-   networks:
-     - postgres-net
-   environment:
-     - spring.datasource.url=jdbc:postgresql://postgresql:5432/mediacontent
-   depends_on:
-     - postgresql
-   volumes:
-     - .m2:/root/.m2
-  content_service:
-   image: user/mediacontent
-   build: ./backend/mediacontent
-   restart: always
-   ports:
-     - 8081:8081
-   networks:
-     - postgres-net
-   environment:
-     - spring.datasource.url=jdbc:postgresql://postgresql:5432/mediacontent?currentSchema=content_schema
-   depends_on:
-     - postgresql
-   volumes:
-     - .m2:/root/.m2
-  frond_end:
-   image: resource/frontend
-   build: ./client
-   restart: always
-   ports:
-     - 3000:3000
-
- postgresql:
-   image: postgres
-   restart: always
-   ports:
-     - 5432:5432
-   networks:
-     - postgres-net
-   environment:
-     POSTGRES_DB : mediacontent
-     POSTGRES_USER :  postgres
-     POSTGRES_PASSWORD : postgres
-networks:
- postgres-net:
+<img width="423" alt="Снимок экрана 2025-02-04 в 20 13 37" src="https://github.com/user-attachments/assets/b2d5f85a-38fe-44ac-b588-5804d6ef3337" />
 
 Этот Docker Compose файл определяет настройку окружающей среды для целого приложения, включающего несколько микросервисов и PostgreSQL в контейнерах Docker. 
 version: 3.7 – определяет версию Docker Compose, которая используется для парсинга файла. Используется версия 3.7, которая совместима с различными функциями управления сетями и сервисами.
