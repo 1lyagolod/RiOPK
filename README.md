@@ -232,7 +232,7 @@ https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/947eabc7-6ceb-49b9-b259-af2ae912f9d0" />
 
 Пример JWT
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security/JwtProvider.java
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/b71c1c67-d54c-4c86-a1ed-ff59e05278ec" />
 
 Создание JWT
