@@ -31,7 +31,7 @@ COPY --from=build /app/target/risk-management-policy-service-*.jar policy-servic
 ENV JAVA_OPTS="-Xms128m -Xmx256m"
 EXPOSE 8081
 
-CMD ["sh", "-c", "java $JAVA_OPTS -jar content-service.jar"]
+CMD ["sh", "-c", "java $JAVA_OPTS -jar policy-service.jar"]
 
 FROM node:18-alpine as build
 
