@@ -24,11 +24,7 @@
 
 Схема алгоритма регистрации страхового случая
 
-<img width="321" alt="image" src="https://github.com/user-attachments/assets/fae43ebb-e216-4815-bff9-53070bc5a4bd" />
-
-Диаграмма развертывания программного средства
-
-<img width="468" alt="image" src="https://github.com/user-attachments/assets/5405b9ac-65b5-497b-b512-20ce12157d83" />
+<img width="309" alt="image" src="https://github.com/user-attachments/assets/a9d1bce3-2288-4f65-af33-edc9d0dc6acf" />
 
 Диаграмма последовательности регистрации страхового случая
 
@@ -67,111 +63,285 @@
 
 <h1>Тестирование</h1>
 
-Результат Junit-тестов
+package com.app.policy;
 
-<img width="310" alt="image" src="https://github.com/user-attachments/assets/e7639c85-a1f5-4498-987b-7173cdd36ec8" />
-
-В этом тесте проверяется функциональность сервисного слоя для работы с сущностью Content. Он включает несколько тестов для различных операций с контентом: успешное получение всех контентов (findAllSuccess), успешное получение контента по ID (findByIdSuccess), ситуация, когда контент по ID не найден (findByIdNotFound), успешное сохранение контента (saveSuccess), успешное обновление контента (updateSuccess), ситуация, когда обновляемый контент не найден (updateNotFound), успешное удаление контента (deleteSuccess) и ситуация, когда удаляемый контент не найден (deleteNotFound). Каждый тест использует Mockito для имитации поведения репозитория и проверки правильности вызовов, а также исключений в случае ошибок.
-
-Пример интеграционного теста с использованием Spring Boot и Junit:
-
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import com.example.demo.model.InsurancePolicy;
-import com.example.demo.service.InsurancePolicyService;
-import com.example.demo.repository.InsurancePolicyRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.app.system.exception.ObjectNotFoundException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-public class InsurancePolicyControllerIntegrationTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    private MockMvc mockMvc;
+@ExtendWith(MockitoExtension.class)
+public class PolicyTest {
 
-    @Autowired
-    private InsurancePolicyRepository insurancePolicyRepository;
-
+    @Mock
+    private PolicyRepository repository;
     @InjectMocks
-    private InsurancePolicyService insurancePolicyService;
+    private PolicyService service;
 
-    private InsurancePolicy testPolicy;
+    List<Policy> policies = new ArrayList<>();
 
     @BeforeEach
-    public void setup() {
-        // создаём тестовый страховой полис
-        testPolicy = new InsurancePolicy(1L, "Test Policy", "2025-01-01", "Life Insurance", 500.0, "Active");
-        insurancePolicyRepository.save(testPolicy); // сохраняем в базу данных для тестов
+    void setUp() {
+        policies.add(new Policy(1L, "name1", "date1", 9, 9.99f, 9.99f, "description1", "file1"));
+        policies.add(new Policy(2L, "name2", "date2", 19, 19.99f, 19.99f, "description2", "file2"));
+        policies.add(new Policy(3L, "name3", "date3", 19, 19.99f, 19.99f, "description3", "file3"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        policies.clear();
     }
 
     @Test
-    void testCreateInsurancePolicy() throws Exception {
-        InsurancePolicy newPolicy = new InsurancePolicy(null, "New Policy", "2025-02-01", "Car Insurance", 300.0, "Pending");
+    void findAllSuccess() {
+        given(repository.findAll()).willReturn(policies);
 
-        mockMvc.perform(post("/api/policies")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(newPolicy)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is("New Policy")))
-                .andExpect(jsonPath("$.startDate", is("2025-02-01")));
+        List<Policy> actualWizards = service.findAllForTest();
+
+        assertThat(actualWizards.size()).isEqualTo(policies.size());
+
+        verify(repository, times(1)).findAll();
     }
 
     @Test
-    void testGetInsurancePolicyById() throws Exception {
-        mockMvc.perform(get("/api/policies/{id}", testPolicy.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(testPolicy.getName())))
-                .andExpect(jsonPath("$.startDate", is(testPolicy.getStartDate())))
-                .andExpect(jsonPath("$.type", is(testPolicy.getType())))
-                .andExpect(jsonPath("$.premium", is(testPolicy.getPremium())))
-                .andExpect(jsonPath("$.status", is(testPolicy.getStatus())));
+    void findByIdSuccess() {
+        Policy policy = policies.get(0);
+
+        given(repository.findById(1L)).willReturn(Optional.of(policy));
+
+        Policy find = service.findForTest(1 + "");
+
+        assertThat(find.getId()).isEqualTo(1);
+        assertThat(find.getName()).isEqualTo(policy.getName());
+        assertThat(find.getDate()).isEqualTo(policy.getDate());
+        assertThat(find.getView()).isEqualTo(policy.getView());
+        assertThat(find.getCtr()).isEqualTo(policy.getCtr());
+        assertThat(find.getRoi()).isEqualTo(policy.getRoi());
+        assertThat(find.getDescription()).isEqualTo(policy.getDescription());
+        assertThat(find.getFile()).isEqualTo(policy.getFile());
+
+        verify(repository, times(1)).findById(1L);
     }
 
     @Test
-    void testUpdateInsurancePolicy() throws Exception {
-        InsurancePolicy updatedPolicy = new InsurancePolicy(testPolicy.getId(), "Updated Policy", "2025-03-01", "Home Insurance", 700.0, "Active");
+    void findByIdNotFound() {
+        given(repository.findById(Mockito.any(Long.class))).willReturn(Optional.empty());
 
-        mockMvc.perform(put("/api/policies/{id}", testPolicy.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(updatedPolicy)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("Updated Policy")))
-                .andExpect(jsonPath("$.startDate", is("2025-03-01")))
-                .andExpect(jsonPath("$.type", is("Home Insurance")))
-                .andExpect(jsonPath("$.premium", is(700.0)))
-                .andExpect(jsonPath("$.status", is("Active")));
+        assertThrows(ObjectNotFoundException.class, () -> service.findForTest(1 + ""));
+
+        verify(repository, times(1)).findById(1L);
     }
 
     @Test
-    void testDeleteInsurancePolicy() throws Exception {
-        mockMvc.perform(delete("/api/policies/{id}", testPolicy.getId()))
-                .andExpect(status().isNoContent());
+    void saveSuccess() {
+        Policy save = policies.get(0);
 
-        Optional<InsurancePolicy> deletedPolicy = insurancePolicyRepository.findById(testPolicy.getId());
-        // Проверяем, что полис был удален
-        assert deletedPolicy.isEmpty();
+        given(repository.save(save)).willReturn(save);
+
+        Policy saved = service.saveForTest(save);
+
+        assertThat(saved.getName()).isEqualTo(save.getName());
+        assertThat(saved.getDate()).isEqualTo(save.getDate());
+        assertThat(saved.getView()).isEqualTo(save.getView());
+        assertThat(saved.getCtr()).isEqualTo(save.getCtr());
+        assertThat(saved.getRoi()).isEqualTo(save.getRoi());
+        assertThat(saved.getDescription()).isEqualTo(save.getDescription());
+        assertThat(saved.getFile()).isEqualTo(save.getFile());
+
+        verify(repository, times(1)).save(save);
     }
 
     @Test
-    void testInsurancePolicyNotFound() throws Exception {
-        mockMvc.perform(get("/api/policies/{id}", 999L))
-                .andExpect(status().isNotFound());
+    void updateSuccess() {
+        Policy old = policies.get(0);
+        Policy update = policies.get(1);
+
+        given(repository.findById(1L)).willReturn(Optional.of(old));
+        given(repository.save(old)).willReturn(old);
+
+        Policy updated = service.updateForTest(1 + "", update);
+
+        assertThat(updated.getId()).isEqualTo(1);
+        assertThat(updated.getName()).isEqualTo(update.getName());
+        assertThat(updated.getDate()).isEqualTo(update.getDate());
+        assertThat(updated.getView()).isEqualTo(update.getView());
+        assertThat(updated.getCtr()).isEqualTo(update.getCtr());
+        assertThat(updated.getRoi()).isEqualTo(update.getRoi());
+        assertThat(updated.getDescription()).isEqualTo(update.getDescription());
+        assertThat(updated.getFile()).isEqualTo(update.getFile());
+
+        verify(repository, times(1)).findById(1L);
+        verify(repository, times(1)).save(old);
+    }
+
+    @Test
+    void updateNotFound() {
+        Policy update = policies.get(1);
+
+        given(repository.findById(1L)).willReturn(Optional.empty());
+
+        assertThrows(ObjectNotFoundException.class, () -> service.updateForTest(1 + "", update));
+
+        verify(repository, times(1)).findById(1L);
+    }
+
+    @Test
+    void deleteSuccess() {
+        Policy wizard = policies.get(0);
+
+        given(repository.findById(1L)).willReturn(Optional.of(wizard));
+        doNothing().when(repository).deleteById(1L);
+
+        service.deleteForTest(1 + "");
+
+        verify(repository, times(1)).findById(1L);
+        verify(repository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteNotFound() {
+        given(repository.findById(1L)).willReturn(Optional.empty());
+
+        assertThrows(ObjectNotFoundException.class, () -> service.deleteForTest(1 + ""));
+
+        verify(repository, times(1)).findById(1L);
+    }
+
+
+}
+
+Результат Junit-тестов
+
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/74ab2769-4040-4802-82a1-1c4306654eba" />
+
+В этом тесте проверяется функциональность сервисного слоя для работы с сущностью Content. Он включает несколько тестов для различных операций с контентом: успешное получение всех контентов (findAllSuccess), успешное получение контента по ID (findByIdSuccess), ситуация, когда контент по ID не найден (findByIdNotFound), успешное сохранение контента (saveSuccess), успешное обновление контента (updateSuccess), ситуация, когда обновляемый контент не найден (updateNotFound), успешное удаление контента (deleteSuccess) и ситуация, когда удаляемый контент не найден (deleteNotFound). Каждый тест использует Mockito для имитации поведения репозитория и проверки правильности вызовов, а также исключений в случае ошибок.
+
+Пример интеграционного теста с использованием Spring Boot и Junit:
+
+package com.app.riskanalysis;
+
+import com.app.system.exception.ObjectNotFoundException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+public class RiskAnalysisIntegrationTest {
+
+    @Autowired
+    private RiskAnalysisRepository repository;
+
+    @Autowired
+    private RiskAnalysisService service;
+
+    private RiskAnalysis riskAnalysis1;
+    private RiskAnalysis riskAnalysis2;
+    private RiskAnalysis riskAnalysis3;
+
+    @BeforeEach
+    void setUp() {
+        // Настроим объекты перед каждым тестом
+        riskAnalysis1 = new RiskAnalysis(1L, "target1", "deadline1", "file1");
+        riskAnalysis2 = new RiskAnalysis(2L, "target2", "deadline2", "file2");
+        riskAnalysis3 = new RiskAnalysis(3L, "target3", "deadline3", "file3");
+
+        repository.save(riskAnalysis1);
+        repository.save(riskAnalysis2);
+        repository.save(riskAnalysis3);
+    }
+
+    @AfterEach
+    void tearDown() {
+        // Очистим базу данных после каждого теста
+        repository.deleteAll();
+    }
+
+    @Test
+    void findAllSuccess() {
+        List<RiskAnalysis> actualWizards = service.findAllForTest();
+
+        assertThat(actualWizards).hasSize(3);
+    }
+
+    @Test
+    void findByIdSuccess() {
+        RiskAnalysis find = service.find("1");
+
+        assertThat(find.getId()).isEqualTo(1);
+        assertThat(find.getTarget()).isEqualTo(riskAnalysis1.getTarget());
+        assertThat(find.getDeadline()).isEqualTo(riskAnalysis1.getDeadline());
+        assertThat(find.getFile()).isEqualTo(riskAnalysis1.getFile());
+    }
+
+    @Test
+    void findByIdNotFound() {
+        assertThrows(ObjectNotFoundException.class, () -> service.find("999"));
+    }
+
+    @Test
+    void saveSuccess() {
+        RiskAnalysis newRisk = new RiskAnalysis(null, "target4", "deadline4", "file4");
+
+        RiskAnalysis saved = service.saveForTest(newRisk);
+
+        assertThat(saved.getTarget()).isEqualTo(newRisk.getTarget());
+        assertThat(saved.getDeadline()).isEqualTo(newRisk.getDeadline());
+        assertThat(saved.getFile()).isEqualTo(newRisk.getFile());
+    }
+
+    @Test
+    void updateSuccess() {
+        RiskAnalysis update = new RiskAnalysis(1L, "updatedTarget", "updatedDeadline", "updatedFile");
+
+        RiskAnalysis updated = service.updateForTest("1", update);
+
+        assertThat(updated.getId()).isEqualTo(1);
+        assertThat(updated.getTarget()).isEqualTo(update.getTarget());
+        assertThat(updated.getDeadline()).isEqualTo(update.getDeadline());
+        assertThat(updated.getFile()).isEqualTo(update.getFile());
+    }
+
+    @Test
+    void updateNotFound() {
+        RiskAnalysis update = new RiskAnalysis(999L, "updatedTarget", "updatedDeadline", "updatedFile");
+
+        assertThrows(ObjectNotFoundException.class, () -> service.updateForTest("999", update));
+    }
+
+    @Test
+    void deleteSuccess() {
+        service.deleteForTest("1");
+
+        assertThrows(ObjectNotFoundException.class, () -> service.find("1"));
+    }
+
+    @Test
+    void deleteNotFound() {
+        assertThrows(ObjectNotFoundException.class, () -> service.deleteForTest("999"));
     }
 }
 
