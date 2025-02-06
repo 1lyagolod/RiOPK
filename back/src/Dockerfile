@@ -26,7 +26,7 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-COPY --from=build /app/target/risk-management-policy-service-*.jar content-service.jar
+COPY --from=build /app/target/risk-management-policy-service-*.jar policy-service.jar
 
 ENV JAVA_OPTS="-Xms128m -Xmx256m"
 EXPOSE 8081
