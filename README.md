@@ -414,8 +414,7 @@ https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security
 
 Dockerfile для сервиса UserService.
 https://github.com/1lyagolod/RiOPK/blob/main/back/src/Dockerfile
-<img width="482" alt="Снимок экрана 2025-02-04 в 20 12 03" src="https://github.com/user-attachments/assets/ab9d49c4-4cd2-4101-9136-f94363e1e4d7" />
-
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/95787ec8-85ad-4be6-b52e-28bb29420e84" />
 
 Этот Dockerfile описывает процесс сборки и запуска Java приложения, используя Maven для сборки и OpenJDK для выполнения. 
 Первая фаза: FROM maven:3.9.8-eclipse-temurin-21 as maven-builder
@@ -446,16 +445,16 @@ CMD ["java", "-jar", "app.jar"]
 Dockerfile для сервиса paper-service схож по своей структуре с файлом для user-service. 
 Ниже приведен Dockerfile для сервиса PolicyService.
 https://github.com/1lyagolod/RiOPK/blob/main/back/src/Dockerfile
-<img width="536" alt="Снимок экрана 2025-02-04 в 20 12 22" src="https://github.com/user-attachments/assets/76386f75-be34-4829-879b-d7798253c2b3" />
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/c31e8012-64b5-47f0-9ac9-defd7a8fceee" />
 
 Dockerfile для frondend части приложения
 https://github.com/1lyagolod/RiOPK/blob/main/back/src/Dockerfile
-<img width="372" alt="image" src="https://github.com/user-attachments/assets/c073fadd-aa06-4ba9-990e-a090c9b3d846" />
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/c9e6a9ef-8720-4d49-82cf-5e651b959098" />
 
 Этот Dockerfile создаёт среду, в которой React-приложение может быть собрано и запущено. Оно использует Alpine-образ для минимизации размера контейнера, устанавливает все необходимые зависимости, создает сборку приложения, а затем запускает сервер для обслуживания запросов. 
 Описание docker-compose.yaml для поднятия приложения
 https://github.com/1lyagolod/RiOPK/blob/main/back/src/docker-compose.yml
-<img width="423" alt="Снимок экрана 2025-02-04 в 20 13 37" src="https://github.com/user-attachments/assets/b2d5f85a-38fe-44ac-b588-5804d6ef3337" />
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/82d980b7-e03e-4a4b-972d-5adf1c9441db" />
 
 Этот Docker Compose файл определяет настройку окружающей среды для целого приложения, включающего несколько микросервисов и PostgreSQL в контейнерах Docker. 
 version: 3.7 – определяет версию Docker Compose, которая используется для парсинга файла. Используется версия 3.7, которая совместима с различными функциями управления сетями и сервисами.
@@ -469,7 +468,7 @@ networks: подключение к внутри-контейнерной сет
 environment: устанавливает подключение к базе данных через URL JDBC для PostgreSQL.
 depends_on: позвляет сервису ожидать доступности сервиса postgresql перед стартом.
 volumes: указывает том, чтобы сохранять/кешировать зависимости Maven локально, благодаря чему скорость сборки повышается, если зависимости не изменяются.
-2 content_service:
+2 policy_service:
 Почти идентичен user_service, с отличиями в:
 build: путь к сборке сервиса - ./backend/paper-service.
 ports: прослушивание порта 8081.
