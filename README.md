@@ -247,7 +247,7 @@ https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security
 <h1>Развертывание</h1>
 
 Dockerfile для сервиса UserService.
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/Dockerfile
 <img width="482" alt="Снимок экрана 2025-02-04 в 20 12 03" src="https://github.com/user-attachments/assets/ab9d49c4-4cd2-4101-9136-f94363e1e4d7" />
 
 
@@ -279,16 +279,16 @@ CMD ["java", "-jar", "app.jar"]
 Устанавливает команду, которая запускается при старте контейнера. В данном случае, это выполнение JAR-файла приложения с помощью java -jar.
 Dockerfile для сервиса paper-service схож по своей структуре с файлом для user-service. 
 Ниже приведен Dockerfile для сервиса PolicyService.
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/Dockerfile
 <img width="536" alt="Снимок экрана 2025-02-04 в 20 12 22" src="https://github.com/user-attachments/assets/76386f75-be34-4829-879b-d7798253c2b3" />
 
 Dockerfile для frondend части приложения
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/Dockerfile
 <img width="372" alt="image" src="https://github.com/user-attachments/assets/c073fadd-aa06-4ba9-990e-a090c9b3d846" />
 
 Этот Dockerfile создаёт среду, в которой React-приложение может быть собрано и запущено. Оно использует Alpine-образ для минимизации размера контейнера, устанавливает все необходимые зависимости, создает сборку приложения, а затем запускает сервер для обслуживания запросов. 
 Описание docker-compose.yaml для поднятия приложения
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/docker-compose.yml
 <img width="423" alt="Снимок экрана 2025-02-04 в 20 13 37" src="https://github.com/user-attachments/assets/b2d5f85a-38fe-44ac-b588-5804d6ef3337" />
 
 Этот Docker Compose файл определяет настройку окружающей среды для целого приложения, включающего несколько микросервисов и PostgreSQL в контейнерах Docker. 
