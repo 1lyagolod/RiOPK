@@ -28,7 +28,7 @@
 
 Диаграмма последовательности регистрации страхового случая
 
-<img width="468" alt="image" src="https://github.com/user-attachments/assets/aeed3a71-dd80-44e6-87c8-4c227a968977" />
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/53781035-da41-4ebf-acda-6596320feb34" />
 
 
 <h1>Документация</h1>
