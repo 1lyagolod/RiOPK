@@ -228,7 +228,7 @@ public class InsurancePolicyControllerIntegrationTest {
 <h1>Безопасность</h1>
 
 Конфигурация SecurityFilterChain
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security/SecurityConfiguration.java
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/947eabc7-6ceb-49b9-b259-af2ae912f9d0" />
 
 Пример JWT
@@ -236,11 +236,11 @@ public class InsurancePolicyControllerIntegrationTest {
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/b71c1c67-d54c-4c86-a1ed-ff59e05278ec" />
 
 Создание JWT
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security/JwtProvider.java
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/b02c3310-2391-4e9a-90af-29eef5b12aea" />
 
 Конфигурация BCryptPasswordEncoder
-
+https://github.com/1lyagolod/RiOPK/blob/main/back/src/main/java/com/app/security/SecurityConfiguration.java
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/5ec008c7-4c99-40aa-b9ca-899c61ad5147" />
 
 
