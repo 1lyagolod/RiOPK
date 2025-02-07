@@ -24,7 +24,7 @@
 
 Схема алгоритма регистрации страхового случая
 
-<img width="309" alt="image" src="https://github.com/user-attachments/assets/a9d1bce3-2288-4f65-af33-edc9d0dc6acf" />
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/84c9ec7f-d8af-41a4-b5a7-55f443cc6550" />
 
 Диаграмма последовательности регистрации страхового случая
 
