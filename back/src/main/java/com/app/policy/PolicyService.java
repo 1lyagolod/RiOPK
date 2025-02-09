@@ -2,6 +2,8 @@ package com.app.policy;
 
 import com.app.appUser.UserService;
 import com.app.enums.PolicyStatus;
+import com.app.policy.patterns.PolicyBuilder;
+import com.app.policy.patterns.PolicyDirector;
 import com.app.riskanalysis.RiskAnalysisService;
 import com.app.system.exception.BadRequestException;
 import com.app.system.exception.ObjectNotFoundException;
@@ -27,22 +29,15 @@ public class PolicyService {
         return repository.findAll(sort);
     }
 
-    public List<Policy> findAllForTest() {
-        return repository.findAll();
-    }
-
     public List<Policy> my() {
         return userService.getCurrentUser().getPolicies();
     }
 
     public Policy find(String id) {
-        Policy policy = repository.findById(Long.parseLong(id)).orElseThrow(() -> new ObjectNotFoundException("Не найден контент по ИД: " + id));
+        Policy policy = repository.findById(Long.parseLong(id))
+                .orElseThrow(() -> new ObjectNotFoundException("Не найден контент по ИД: " + id));
         policy.setView(policy.getView() + 1);
         return repository.save(policy);
-    }
-
-    public Policy findForTest(String id) {
-        return repository.findById(Long.parseLong(id)).orElseThrow(() -> new ObjectNotFoundException("Не найден контент по ИД: " + id));
     }
 
     public Policy approved(String id) {
@@ -69,20 +64,21 @@ public class PolicyService {
         return repository.save(save);
     }
 
-    public Policy saveForTest(Policy save) {
-        return repository.save(save);
+    public Policy createPolicyWithBuilder(String name, float ctr, float roi, String description) {
+        PolicyBuilder builder = new PolicyBuilder();
+        PolicyDirector director = new PolicyDirector();
+        director.constructBasicPolicy(builder);
+        builder.setName(name);
+        builder.setCtr(ctr);
+        builder.setRoi(roi);
+        builder.setDescription(description);
+        return builder.build();
     }
 
     public Policy update(String id, Policy update, String orderingId) {
-        Policy old = findForTest(id);
+        Policy old = find(id);
         old.update(update);
         old.setRiskAnalysis(riskAnalysisService.find(orderingId));
-        return repository.save(old);
-    }
-
-    public Policy updateForTest(String id, Policy update) {
-        Policy old = findForTest(id);
-        old.updateForTest(update);
         return repository.save(old);
     }
 
@@ -100,9 +96,4 @@ public class PolicyService {
     public void delete(String id) {
         repository.deleteById(find(id).getId());
     }
-
-    public void deleteForTest(String id) {
-        repository.deleteById(findForTest(id).getId());
-    }
-
 }
